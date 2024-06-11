@@ -1,6 +1,8 @@
 package com.restexample.restful.service;
 
 import com.restexample.restful.entity.Produto;
+import com.restexample.restful.exception.ValidaNullable;
+import com.restexample.restful.exception.ValidaPrecoProduto;
 import com.restexample.restful.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,13 @@ public class ProdutoService {
         this.repository = repository;
     }
 
-    public Produto saveProduct(Produto produto) {
+    public Produto saveProduct(Produto produto) throws Exception{
+        if (produto.getNome() == null || produto.getPreco() == null){
+            throw new ValidaNullable();
+        }
+        if (produto.getPreco() < 0) {
+            throw new ValidaPrecoProduto();
+        }
         return repository.save(produto);
     }
 
